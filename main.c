@@ -16,15 +16,19 @@
  * destination_node: destination node
  */
 int main(int argc, char *argv[]) {
-    struct network_t network;
+    network_t network;
     int *source_coords, *destination_coords, *rr;
 
-    // Check if args are correct
+    // Validation and parsing of args
     if (parse_args(argc, argv)) exit(1);
 
+    // Initialize network components
     init_network(&network);
 
     // Allocate source_coords, destination_coords and (also initialize) rr
+    source_coords = (int*) calloc(network.dimensions, sizeof(int));
+    destination_coords = (int*) calloc(network.dimensions, sizeof(int));
+    rr = (int*) malloc(network.dimensions * sizeof(int));
 
     /*
     // Calculate RR
