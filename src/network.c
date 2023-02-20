@@ -31,3 +31,34 @@ void calculate_node_coords(network_t *network, int *coords, unsigned long node_i
 
     coords[i] = (int) node_id_aux;
 }
+
+void calculate_RR(network_t *network, int *source_coords, int *destination_coords, int *rr) {
+    int i;
+    int half_processors_per_dimension = network->processors_per_dimension/2;
+
+    // If hipercube, just xor
+    if (network->processors_per_dimension == 2) {
+        for (i = 0; i < network->dimensions; i++) {
+            rr[i] = destination_coords[i] ^ source_coords[i];
+        }
+    }
+    else {
+        for (i = 0; i < network->dimensions; i++) {
+            rr[i] = destination_coords[i] - source_coords[i];
+        }
+    }
+
+    // If it is topology composed of rings, get shortest path
+    if (network->has_rings) {
+
+        for (i = 0; i < network->dimensions; i++) {
+
+            if (rr[i] > half_processors_per_dimension) {
+                rr[i] = rr[i] - network->processors_per_dimension;
+            }
+            else if (rr[i] < -half_processors_per_dimension) {
+                rr[i] = rr[i] + network->processors_per_dimension;
+            }
+        }
+    }
+}

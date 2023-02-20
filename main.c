@@ -39,10 +39,12 @@ int main(int argc, char *argv[]) {
     print_array(source_coords, network.dimensions);
     print_array(destination_coords, network.dimensions);
 
-/*
-    // Calculate RR
-    calculate_RR();
 
+    // Calculate RR
+    calculate_RR(&network, source_coords, destination_coords, rr);
+
+    print_array(rr, network.dimensions);
+/*
     // Print distance, RR and path
     print_distance();
     print_RR();
