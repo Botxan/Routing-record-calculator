@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "network.h"
 #include "globals.h"
 
@@ -61,4 +63,14 @@ void calculate_RR(network_t *network, int *source_coords, int *destination_coord
             }
         }
     }
+}
+
+unsigned long get_distance(int *rr, int rr_size) {
+    unsigned long distance = 0;
+
+    for (int i = 0; i < rr_size; i++) {
+        distance += abs(rr[i]);
+    }
+
+    return distance;
 }

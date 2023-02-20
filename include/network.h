@@ -38,4 +38,13 @@ void calculate_node_coords(network_t *network, int *coords, unsigned long node_i
  */
 void calculate_RR(network_t *network, int *source_coords, int *destination_coords, int *rr);
 
-
+/**
+ * Function: get_distance
+ * ----------------------
+ * Given an RR, calculate the distance from one node to another.
+ *
+ * source_coords: an array of integers that identifies the source node coords
+ * destination_coords: an array of integers that identifies the destination node coords
+ * rr: array of integers that idenfitied the calculated RR between two nodes
+ */
+unsigned long get_distance(int *rr, int rr_size);
