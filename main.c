@@ -25,12 +25,21 @@ int main(int argc, char *argv[]) {
     // Initialize network components
     init_network(&network);
 
+    printf("%d-ary %d-%s: %ld nodes in total.\n", network.processors_per_dimension, network.dimensions, network.topology_name, network.max_nodes);
+
     // Allocate source_coords, destination_coords and (also initialize) rr
     source_coords = (int*) calloc(network.dimensions, sizeof(int));
     destination_coords = (int*) calloc(network.dimensions, sizeof(int));
     rr = (int*) malloc(network.dimensions * sizeof(int));
 
-    /*
+    // Calculate source node and destination node
+    calculate_node_coords(&network, source_coords, args.source_node);
+    calculate_node_coords(&network, destination_coords, args.destination_node);
+
+    print_array(source_coords, network.dimensions);
+    print_array(destination_coords, network.dimensions);
+
+/*
     // Calculate RR
     calculate_RR();
 
@@ -38,5 +47,5 @@ int main(int argc, char *argv[]) {
     print_distance();
     print_RR();
     print_path();
-    */
+*/
 }

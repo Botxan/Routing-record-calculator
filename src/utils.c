@@ -12,6 +12,7 @@ args_t args;
 int parse_args(int argc, char *argv[]) {
     char *p;
     int return_code = 0;
+    long dimensions, processors_per_dimension, has_rings, source_node, destination_node;
 
     // Check number of args is correct
     if (argc != 6) {
@@ -20,7 +21,7 @@ int parse_args(int argc, char *argv[]) {
     }
 
     // Check that the dimensions are a positive number
-    long dimensions = strtol(argv[1], &p, 10);
+    dimensions = strtol(argv[1], &p, 10);
 
     if (errno != 0 || *p != '\0' || dimensions <= 0 || dimensions > INT_MAX) {
         fprintf(stderr, "Invalid number of dimensions.\n");
@@ -30,17 +31,18 @@ int parse_args(int argc, char *argv[]) {
     }
 
     // Check that the processors per dimension are a positive number
-    long processors_per_dimension = strtol(argv[2], &p, 10);
+    processors_per_dimension = strtol(argv[2], &p, 10);
 
     if (errno != 0 || *p != '\0' || processors_per_dimension <= 0 || processors_per_dimension > INT_MAX) {
         fprintf(stderr, "Invalid number of processors per dimension.\n");
         return_code =  1;
     } else {
         args.processors_per_dimension =(unsigned int) processors_per_dimension;
+        args.max_nodes = (unsigned long) pow(processors_per_dimension, dimensions);
     }
 
     // Check that rings parameters is either 0 or 1
-    long has_rings = strtol(argv[3], &p, 10);
+    has_rings = strtol(argv[3], &p, 10);
 
     if (errno != 0 || *p != '\0' || has_rings < 0 || has_rings > 1) {
         fprintf(stderr, "Rings argument has to be either 0 or 1.\n");
@@ -49,9 +51,15 @@ int parse_args(int argc, char *argv[]) {
         args.has_rings = (unsigned int) has_rings;
     }
 
+    // Hypbercube with rings not allowed
+    if (args.processors_per_dimension == 2 && args.has_rings == 1) {
+        fprintf(stderr, "Hypercube with rings is not allowed.\n");
+        return_code =  1;
+    }
+
     // Check that source node is within valid range
-    long source_node = strtol(argv[4], &p, 10);
-    if (errno != 0 || *p != '\0' || source_node < 0 || source_node >= (long) pow(processors_per_dimension, dimensions)) {
+    source_node = strtol(argv[4], &p, 10);
+    if (errno != 0 || *p != '\0' || source_node < 0 || source_node >= args.max_nodes) {
         fprintf(stderr, "The source node is invalid.\n");
         return_code =  1;
     } else {
@@ -59,8 +67,8 @@ int parse_args(int argc, char *argv[]) {
     }
 
     // Check that destination node is within valid range
-    long destination_node = strtol(argv[5], &p, 10);
-    if (errno != 0 || *p != '\0' || destination_node < 0 || destination_node >= (long) pow(processors_per_dimension, dimensions)) {
+    destination_node = strtol(argv[5], &p, 10);
+    if (errno != 0 || *p != '\0' || destination_node < 0 || destination_node >= args.max_nodes) {
         fprintf(stderr, "The destination node is invalid.\n");
         return_code =  1;
     }
@@ -73,4 +81,19 @@ int parse_args(int argc, char *argv[]) {
     }
 
     return return_code;
+}
+
+void print_array(int *array, size_t size) {
+    int i;
+
+    if (size > 0) {
+        printf("[");
+
+        for (i = 0; i < size-1; i++) {
+            printf("%d, ", array[i]);
+        }
+        printf("%d]", array[size-1]);
+    }
+
+    printf("\n");
 }
