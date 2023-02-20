@@ -5,8 +5,11 @@
 #include <math.h>
 
 #include "utils.h"
+#include "globals.h"
 
-int parse_args(int argc, char *argv[], network *net) {
+args_t args;
+
+int parse_args(int argc, char *argv[]) {
     char *p;
     int return_code = 0;
 
@@ -23,7 +26,7 @@ int parse_args(int argc, char *argv[], network *net) {
         fprintf(stderr, "Invalid number of dimensions.\n");
         return_code =  1;
     } else {
-        net->dimensions = (int) dimensions;
+        args.dimensions = (unsigned int) dimensions;
     }
 
     // Check that the processors per dimension are a positive number
@@ -33,7 +36,7 @@ int parse_args(int argc, char *argv[], network *net) {
         fprintf(stderr, "Invalid number of processors per dimension.\n");
         return_code =  1;
     } else {
-        net->processors_per_dimension = processors_per_dimension;
+        args.processors_per_dimension =(unsigned int) processors_per_dimension;
     }
 
     // Check that rings parameters is either 0 or 1
@@ -43,7 +46,7 @@ int parse_args(int argc, char *argv[], network *net) {
         fprintf(stderr, "Rings argument has to be either 0 or 1.\n");
         return_code =  1;
     } else {
-        net->has_rings = has_rings;
+        args.has_rings = (unsigned int) has_rings;
     }
 
     // Check that source node is within valid range
@@ -51,6 +54,8 @@ int parse_args(int argc, char *argv[], network *net) {
     if (errno != 0 || *p != '\0' || source_node < 0 || source_node >= (long) pow(processors_per_dimension, dimensions)) {
         fprintf(stderr, "The source node is invalid.\n");
         return_code =  1;
+    } else {
+        args.source_node = (unsigned long) source_node;
     }
 
     // Check that destination node is within valid range
@@ -63,6 +68,8 @@ int parse_args(int argc, char *argv[], network *net) {
     if (source_node == destination_node) {
         fprintf(stderr, "Source and destination node cannot be the same.\n");
         return_code =  1;
+    } else {
+        args.destination_node = (unsigned long) destination_node;
     }
 
     return return_code;

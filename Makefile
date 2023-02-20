@@ -8,7 +8,7 @@ CC = gcc
 CFLAGS = -g -Wall -I$(IDIR)
 LIBS = -lm
 
-_DEPS = utils.h network.h
+_DEPS = utils.h network.h globals.h
 DEPS = $(patsubst %, $(IDIR)/%, $(_DEPS))
 
 _OBJ = utils.o network.o

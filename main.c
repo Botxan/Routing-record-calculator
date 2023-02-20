@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "globals.h"
 #include "utils.h"
 
 /**
- * Funtion: main
+ * Function: main
  * -------------
  * Calculates the routing record (RR) of a packet with the source and destination passed as parameters.
  *
@@ -15,16 +16,17 @@
  * destination_node: destination node
  */
 int main(int argc, char *argv[]) {
-    struct network net;
+    struct network_t network;
     int *source_coords, *destination_coords, *rr;
 
     // Check if args are correct
-    if (parse_args(argc, argv, &net))
-    exit(1);
+    if (parse_args(argc, argv)) exit(1);
+
+    init_network(&network);
+
+    // Allocate source_coords, destination_coords and (also initialize) rr
 
     /*
-    // Initialize source_coords, destination_coords and rr
-
     // Calculate RR
     calculate_RR();
 
