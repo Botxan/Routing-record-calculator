@@ -36,17 +36,20 @@ int main(int argc, char *argv[]) {
     calculate_node_coords(&network, source_coords, args.source_node);
     calculate_node_coords(&network, destination_coords, args.destination_node);
 
+    printf("Packet goes from ");
     print_array(source_coords, network.dimensions);
+    printf(" to ");
     print_array(destination_coords, network.dimensions);
+    printf("\n");
 
     // Calculate RR
     calculate_RR(&network, source_coords, destination_coords, rr);
 
     // Print distance, RR and path
     printf("Distance: %ld\n", get_distance(rr, network.dimensions));
-
+    printf("Routing record: ");
     print_array(rr, network.dimensions);
-
-    // print_path();
-
+    printf("\n");
+    printf("Path: ");
+    print_path(&network, source_coords, destination_coords, rr);
 }

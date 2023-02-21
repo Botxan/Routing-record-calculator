@@ -94,6 +94,4 @@ void print_array(int *array, size_t size) {
         }
         printf("%d]", array[size-1]);
     }
-
-    printf("\n");
 }

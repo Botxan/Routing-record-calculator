@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "network.h"
 #include "globals.h"
@@ -73,4 +75,51 @@ unsigned long get_distance(int *rr, int rr_size) {
     }
 
     return distance;
+}
+
+void print_path(network_t *network, int *source_coords, int *dest_coords, int *rr) {
+    int i, j;
+
+    // If hipercube, just xor, cause there is no sign to
+    // know whether to traverse forward or backward
+    if (network->processors_per_dimension == 2) {
+        for (i = network->dimensions-1; i >= 0; i--) {
+            if (rr[i] == 1) {
+                printf("%ld -> ", get_node_number_from_coords(source_coords, network->dimensions, network->processors_per_dimension));
+                source_coords[i] ^= rr[i];
+            }
+        }
+    }
+    // mesh or torus
+    else {
+        for (i = network->dimensions-1; i >= 0; i--) {
+            for (j = 0; j < abs(rr[i]); j++) {
+                printf("%ld -> ", get_node_number_from_coords(source_coords, network->dimensions, network->processors_per_dimension));
+
+                if (rr[i] > 0) {
+                    source_coords[i]++;
+                    if (source_coords[i] >= network->processors_per_dimension) source_coords[i] = 0;
+                }
+                else {
+                    source_coords[i]--;
+                    if (source_coords[i] < 0) source_coords[i] = network->processors_per_dimension-1;
+
+                }
+            }
+        }
+    }
+
+    printf("%ld\n", get_node_number_from_coords(source_coords, network->dimensions, network->processors_per_dimension));
+
+}
+
+unsigned long get_node_number_from_coords(int *coords, int dimensions, int base) {
+    int i = 0;
+    unsigned long node_number = 0;
+
+    for (i = 0; i < dimensions; i++) {
+        node_number += coords[dimensions-i-1] * (unsigned long) pow(base, i);
+    }
+
+    return node_number;
 }

@@ -48,3 +48,26 @@ void calculate_RR(network_t *network, int *source_coords, int *destination_coord
  * rr: array of integers that idenfitied the calculated RR between two nodes
  */
 unsigned long get_distance(int *rr, int rr_size);
+
+/**
+ * Function: print_path
+ * ----------------------
+ * Draws the path from the source node to the destination node
+ * following the routing record passed by parameter.
+ *
+ * source_coords: an array of integers that identifies the source node coords
+ * destination_coords: an array of integers that identifies the destination node coords
+ * rr: array of integers that idenfitied the calculated RR between two nodes
+ */
+void print_path(network_t *network, int *source_coords, int *destination_coords, int *rr);
+
+/**
+ * Function: get_number_from_coords
+ * --------------------------------
+ * Given the coordinates of a node, returns its index/node-number.
+ *
+ * coords: an array of integers that identifies node coords
+ * dimensions: the number of elements in coords
+ * base: the base used the coords
+ */
+unsigned long get_node_number_from_coords(int *coords, int dimensions, int base);
