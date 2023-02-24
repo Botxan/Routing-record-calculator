@@ -16,6 +16,7 @@ OBJ = $(patsubst %, $(ODIR)/%, $(_OBJ))
 
 ## Compilation ##
 $(ODIR)/%.o: src/%.c $(DEPS)
+	@mkdir -p $(ODIR)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 calculate_routing_records: $(OBJ)
